@@ -1,7 +1,7 @@
-FROM gradle:7.3.3-jdk17 AS build
+FROM gradle:8.8.0-jdk17 AS build
 WORKDIR /app
 
-COPY . .
+COPY --chown=gradle:gradle . .
 
 RUN gradle build -x test
 
