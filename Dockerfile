@@ -1,8 +1,15 @@
-FROM openjdk:17
+FROM gradle:7.3.3-jdk17 AS build
+WORKDIR /app
+
+COPY . .
+
+RUN gradle build -x test
+
+FROM openjdk:17-jdk-slim
+
 ENV TZ=Asia/Seoul
 
-RUN ./gradlew build -x test
+COPY --from=build /app/build/libs/*.jar app.jar
 
-COPY build/libs/gocd-test-repository-0.0.1-SNAPSHOT.jar app.jar
-
+# 애플리케이션 실행
 ENTRYPOINT ["java", "-jar", "/app.jar"]
